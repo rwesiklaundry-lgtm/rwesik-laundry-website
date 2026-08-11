@@ -9,17 +9,20 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="icon" type="image/png" sizes="128x128" href="assets/favicon.png">
 <link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="mobile-menu.css">
 </head>
 <body>
 <div class="topbar">Buka setiap hari 08.00–20.00 • Jl. Syeh Jangkung No. 77, Pati Kota</div>
 <header class="site-header">
   <div class="wrap nav">
     <a class="brand" href="index.html" aria-label="Rwesik Laundry"><img src="assets/rwesik-logo-fixed.svg" alt="Rwesik Laundry"></a>
-    <nav class="navlinks" aria-label="Navigasi utama">
+    <button class="menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
+    <nav id="mobile-menu" class="navlinks" aria-label="Navigasi utama">
       <a href="#tentang">Tentang</a><a href="layanan.html">Layanan</a><a href="harga.html">Harga</a><a href="garansi.html">Garansi</a><a href="sepatu.html">Cuci Sepatu</a><a href="#proses">Proses</a><a class="btn primary" target="_blank" href="https://wa.me/6282231187316">WhatsApp</a>
     </nav>
   </div>
 </header>
+<div class="menu-backdrop" aria-hidden="true"></div>
 
 <main>
 <section class="hero">
@@ -118,5 +121,6 @@
 
 <footer class="footer"><div class="wrap footer-in"><div><img src="assets/rwesik-logo-fixed.svg" alt="Rwesik Laundry"><div>Laundry Bergaransi, Pelayanan Sepenuh Hati • Pati Kota</div></div><div class="footer-right" style="text-align:right"><strong>08.00–20.00 • Setiap Hari</strong><br><a href="https://wa.me/6282231187316">0822-3118-7316</a></div></div></footer>
 <a class="floating" target="_blank" href="https://wa.me/6282231187316">WhatsApp</a>
+<script src="mobile-menu.js"></script>
 </body>
 </html>
