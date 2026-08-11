@@ -2,25 +2,58 @@
   const toggle = document.querySelector('.menu-toggle');
   const menu = document.querySelector('.navlinks');
   const backdrop = document.querySelector('.menu-backdrop');
-  if(toggle && menu && backdrop){
-    function setMenu(open){
-      document.body.classList.toggle('menu-open', open);
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.setAttribute('aria-label', open ? 'Tutup menu' : 'Buka menu');
-    }
+  if(!toggle || !menu || !backdrop) return;
 
-    toggle.addEventListener('click', function(){
-      setMenu(!document.body.classList.contains('menu-open'));
-    });
+  const originalParent = menu.parentNode;
+  const placeholder = document.createComment('rwesik-mobile-menu');
+  originalParent.insertBefore(placeholder, menu);
+  const mq = window.matchMedia('(max-width:700px)');
 
-    backdrop.addEventListener('click', function(){ setMenu(false); });
-    menu.querySelectorAll('a').forEach(function(link){
-      link.addEventListener('click', function(){ setMenu(false); });
-    });
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape') setMenu(false);
-    });
+  function setMenu(open){
+    document.body.classList.toggle('menu-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Tutup menu' : 'Buka menu');
   }
+
+  function syncPlacement(){
+    setMenu(false);
+    if(mq.matches){
+      if(menu.parentNode !== document.body){
+        document.body.appendChild(menu);
+      }
+      menu.classList.add('mobile-portaled');
+    }else{
+      if(menu.parentNode !== originalParent){
+        originalParent.insertBefore(menu, placeholder.nextSibling);
+      }
+      menu.classList.remove('mobile-portaled');
+    }
+  }
+
+  syncPlacement();
+  if(typeof mq.addEventListener === 'function') mq.addEventListener('change', syncPlacement);
+  else if(typeof mq.addListener === 'function') mq.addListener(syncPlacement);
+
+  toggle.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    setMenu(!document.body.classList.contains('menu-open'));
+  });
+
+  backdrop.addEventListener('click', function(e){
+    e.preventDefault();
+    setMenu(false);
+  });
+
+  menu.addEventListener('click', function(e){
+    const link = e.target.closest('a');
+    if(!link) return;
+    setMenu(false);
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') setMenu(false);
+  });
 })();
 
 (function(){
