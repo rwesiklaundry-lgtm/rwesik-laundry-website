@@ -24,6 +24,50 @@ jobs:
       - name: Checkout website
         uses: actions/checkout@v6
 
+      - name: Apply hamburger navigation to every public page
+        shell: python
+        run: |
+          from pathlib import Path
+
+          pages = ["layanan.html", "harga.html", "sepatu.html", "garansi.html"]
+          old_header = '<div class="wrap navin"><a href="index.html"><img class="logo" src="assets/rwesik-logo.png"></a><div class="links">'
+          new_header = '<div class="wrap navin"><a class="brand" href="index.html" aria-label="Rwesik Laundry"><img class="logo" src="assets/rwesik-logo.png" alt="Rwesik Laundry"></a><button class="menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button><div id="mobile-menu" class="links navlinks">'
+
+          for name in pages:
+              p = Path(name)
+              s = p.read_text(encoding="utf-8")
+
+              if 'mobile-menu.css' not in s:
+                  s = s.replace(
+                      '<link rel="stylesheet" href="styles.css">',
+                      '<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="mobile-menu.css">',
+                      1,
+                  )
+
+              if 'class="menu-toggle"' not in s:
+                  if old_header not in s:
+                      raise SystemExit(f'Header pattern not found in {name}')
+                  s = s.replace(old_header, new_header, 1)
+
+              if 'class="menu-backdrop"' not in s:
+                  s = s.replace('</nav><header', '</nav><div class="menu-backdrop" aria-hidden="true"></div><header', 1)
+
+              if 'mobile-menu.js' not in s:
+                  s = s.replace('</body>', '<script src="mobile-menu.js"></script></body>', 1)
+
+              p.write_text(s, encoding="utf-8")
+
+      - name: Mirror rendered website to gh-pages
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html layanan.html harga.html sepatu.html garansi.html mobile-menu.css mobile-menu.js
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish persistent mobile hamburger navigation [skip ci]"
+          fi
+          git push origin HEAD:gh-pages --force
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
