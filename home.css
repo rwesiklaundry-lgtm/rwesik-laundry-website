@@ -13,3 +13,28 @@
 .navlinks .btn{padding:11px 18px;box-shadow:0 8px 18px rgba(17,140,79,.18)}
 @media(max-width:950px){.brand img{width:205px}.navlinks{padding-left:8px}.navlinks>a:not(.btn){padding:8px 5px}}
 @media(max-width:700px){.topbar{font-size:12px;padding:7px 10px}.nav{min-height:78px}.nav:before{width:210px;height:70px}.brand img{width:178px;max-height:56px}.navlinks{border:0;background:transparent;box-shadow:none;padding:0}.navlinks .btn{padding:10px 15px}}
+
+
+/* Mobile navigation — semua menu tetap tersedia di HP */
+@media(max-width:700px){
+  .nav{min-height:auto;flex-wrap:wrap;padding:9px 0 8px;gap:7px}
+  .brand{width:100%;justify-content:center;padding:3px 0}
+  .brand img{width:178px;max-height:56px}
+  .navlinks{
+    order:2;width:100%;display:flex!important;align-items:center!important;
+    overflow-x:auto;overflow-y:hidden;gap:5px!important;
+    padding:6px!important;border:1px solid rgba(17,140,79,.14)!important;
+    border-radius:16px!important;background:rgba(255,255,255,.92)!important;
+    box-shadow:0 6px 18px rgba(8,70,40,.06)!important;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .navlinks::-webkit-scrollbar{display:none}
+  .navlinks a:not(.btn){
+    display:inline-flex!important;flex:0 0 auto;white-space:nowrap;
+    padding:8px 10px!important;font-size:12px!important;border-radius:999px;
+  }
+  .navlinks .btn{
+    display:inline-flex!important;flex:0 0 auto;white-space:nowrap;
+    padding:9px 12px!important;font-size:12px!important;
+  }
+}
