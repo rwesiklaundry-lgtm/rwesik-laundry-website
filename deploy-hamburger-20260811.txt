@@ -1,0 +1,1 @@
+Trigger deployment after mobile hamburger navigation was synced to main.
