@@ -24,6 +24,16 @@ jobs:
       - name: Checkout website
         uses: actions/checkout@v6
 
+      - name: Build HQ image assets
+        shell: bash
+        run: |
+          mkdir -p assets
+          base64 -d .asset-src/washing.b64 > assets/process-washing-hq.webp
+          base64 -d .asset-src/ironing.b64 > assets/process-ironing-hq.webp
+          base64 -d .asset-src/packing.b64 > assets/process-packing-hq.webp
+          base64 -d .asset-src/handover.b64 > assets/process-handover-hq.webp
+          base64 -d .asset-src/outlet.b64 > assets/outlet-rwesik-hq.webp
+
       - name: Apply hamburger navigation to every public page
         shell: python
         run: |
@@ -57,14 +67,27 @@ jobs:
 
               p.write_text(s, encoding="utf-8")
 
+      - name: Enable clickable HQ photo gallery
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          tag = '<script src="gallery.js"></script>'
+          if tag not in s:
+              s = s.replace('</body>', tag + '\n</body>', 1)
+          p.write_text(s, encoding='utf-8')
+
       - name: Mirror rendered website to gh-pages
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html layanan.html harga.html sepatu.html garansi.html mobile-menu.css mobile-menu.js
+          git add index.html layanan.html harga.html sepatu.html garansi.html mobile-menu.css mobile-menu.js gallery.js \
+            assets/process-washing-hq.webp assets/process-ironing-hq.webp assets/process-packing-hq.webp \
+            assets/process-handover-hq.webp assets/outlet-rwesik-hq.webp
           if ! git diff --cached --quiet; then
-            git commit -m "Publish persistent mobile hamburger navigation [skip ci]"
+            git commit -m "Publish HQ gallery and mobile navigation [skip ci]"
           fi
           git push origin HEAD:gh-pages --force
 
