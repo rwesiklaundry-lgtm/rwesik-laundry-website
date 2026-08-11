@@ -1,0 +1,1 @@
+Preparing direct static GitHub Pages deployment without image build step.
