@@ -23,14 +23,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Build HQ image assets
+        shell: bash
+        run: |
+          mkdir -p assets
+          base64 -d .asset-src/washing.b64 > assets/process-washing-hq.webp
+          base64 -d .asset-src/ironing.b64 > assets/process-ironing-hq.webp
+          base64 -d .asset-src/packing.b64 > assets/process-packing-hq.webp
+          base64 -d .asset-src/handover.b64 > assets/process-handover-hq.webp
+          base64 -d .asset-src/outlet.b64 > assets/outlet-rwesik-hq.webp
+          rm -rf .asset-src
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - name: Upload website
         uses: actions/upload-pages-artifact@v4
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
