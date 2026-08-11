@@ -8,6 +8,7 @@
   const placeholder = document.createComment('rwesik-mobile-menu');
   originalParent.insertBefore(placeholder, menu);
   const mq = window.matchMedia('(max-width:700px)');
+  let lastTouch = 0;
 
   function setMenu(open){
     document.body.classList.toggle('menu-open', open);
@@ -18,16 +19,23 @@
   function syncPlacement(){
     setMenu(false);
     if(mq.matches){
-      if(menu.parentNode !== document.body){
-        document.body.appendChild(menu);
-      }
+      if(menu.parentNode !== document.body) document.body.appendChild(menu);
       menu.classList.add('mobile-portaled');
     }else{
-      if(menu.parentNode !== originalParent){
-        originalParent.insertBefore(menu, placeholder.nextSibling);
-      }
+      if(menu.parentNode !== originalParent) originalParent.insertBefore(menu, placeholder.nextSibling);
       menu.classList.remove('mobile-portaled');
     }
+  }
+
+  function goToLink(link, event){
+    const href = link && link.href;
+    if(!href) return;
+    if(event){
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    setMenu(false);
+    window.location.assign(href);
   }
 
   syncPlacement();
@@ -45,11 +53,24 @@
     setMenu(false);
   });
 
+  /* iOS/Safari fallback: touch dan click sama-sama mengarahkan URL secara eksplisit. */
+  menu.addEventListener('touchend', function(e){
+    const link = e.target.closest('a');
+    if(!link) return;
+    lastTouch = Date.now();
+    goToLink(link, e);
+  }, {passive:false, capture:true});
+
   menu.addEventListener('click', function(e){
     const link = e.target.closest('a');
     if(!link) return;
-    setMenu(false);
-  });
+    if(Date.now() - lastTouch < 700){
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    goToLink(link, e);
+  }, true);
 
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape') setMenu(false);
@@ -123,9 +144,7 @@
       el.appendChild(badge);
     }
     el.addEventListener('click', function(){ openPhoto(el); });
-    el.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openPhoto(el); }
-    });
+    el.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openPhoto(el); } });
   });
 
   closeBtn.addEventListener('click', closePhoto);
