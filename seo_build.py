@@ -92,7 +92,6 @@ def apply_meta(path, data, include_schema=False):
 for name, data in PAGES.items():
     apply_meta(name, data, include_schema=(name == "index.html"))
 
-# XML sitemap for manual submission to Google Search Console.
 lastmod = "2026-08-12"
 urls = [
     (BASE + "/", "1.0"),
@@ -108,4 +107,7 @@ entries = "\n".join(
 sitemap = f'''<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{entries}\n</urlset>\n'''
 Path("sitemap.xml").write_text(sitemap, encoding="utf-8")
 
-print("SEO metadata and sitemap generated.")
+robots = f'''User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n'''
+Path("robots.txt").write_text(robots, encoding="utf-8")
+
+print("SEO metadata, sitemap, and robots.txt generated.")
