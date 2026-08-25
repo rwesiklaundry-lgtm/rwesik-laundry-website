@@ -42,9 +42,10 @@ BUSINESS_SCHEMA = {
     "description": "Laundry bergaransi di Pati yang melayani laundry kiloan, satuan, sepatu, perlengkapan rumah tangga, dan antar-jemput.",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Jl. Syeh Jangkung No. 77",
+        "streetAddress": "Jl. Syeh Jangkung No. 77, Pati Kidul",
         "addressLocality": "Pati",
         "addressRegion": "Jawa Tengah",
+        "postalCode": "59114",
         "addressCountry": "ID"
     },
     "openingHoursSpecification": [{
@@ -77,6 +78,9 @@ def clean_existing(s):
 def apply_meta(path, data, include_schema=False):
     p = Path(path)
     s = p.read_text(encoding="utf-8")
+    # Keep the public-facing address consistent with the verified Google Business Profile.
+    s = s.replace("Jl. Syeh Jangkung No. 77, Pati Kota", "Jl. Syeh Jangkung No. 77, Pati Kidul")
+    s = s.replace("Pelayanan Sepenuh Hati • Pati Kota", "Pelayanan Sepenuh Hati • Pati Kidul")
     s = clean_existing(s)
     s = re.sub(r'<title>.*?</title>', f'<title>{data["title"]}</title>', s, count=1, flags=re.I | re.S)
 
@@ -92,7 +96,7 @@ def apply_meta(path, data, include_schema=False):
 for name, data in PAGES.items():
     apply_meta(name, data, include_schema=(name == "index.html"))
 
-lastmod = "2026-08-12"
+lastmod = "2026-08-25"
 urls = [
     (BASE + "/", "1.0"),
     (BASE + "/layanan.html", "0.9"),
@@ -110,4 +114,4 @@ Path("sitemap.xml").write_text(sitemap, encoding="utf-8")
 robots = f'''User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n'''
 Path("robots.txt").write_text(robots, encoding="utf-8")
 
-print("SEO metadata, sitemap, and robots.txt generated.")
+print("SEO metadata, sitemap, robots.txt, and verified business address generated.")
