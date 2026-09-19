@@ -21,8 +21,8 @@ PAGES = {
         "url": BASE + "/harga.html",
     },
     "sepatu.html": {
-        "title": "Cuci Sepatu Pati Mulai Rp25.000 | Rwesik Laundry",
-        "description": "Cuci sepatu di Rwesik Laundry Pati mulai Rp25.000. Tersedia Fast Clean, Deep Clean, Leather/Suede, Rewhitening dan Unyellowing sesuai kondisi sepatu.",
+        "title": "Cuci Sepatu Pati Mulai Rp30.000 | Rwesik Laundry",
+        "description": "Cuci sepatu di Rwesik Laundry Pati mulai Rp30.000. Tersedia Fast Clean, Deep Clean, Leather/Suede, Rewhitening dan Unyellowing sesuai kondisi sepatu.",
         "url": BASE + "/sepatu.html",
     },
     "garansi.html": {
@@ -96,7 +96,7 @@ def apply_meta(path, data, include_schema=False):
 for name, data in PAGES.items():
     apply_meta(name, data, include_schema=(name == "index.html"))
 
-lastmod = "2026-08-25"
+lastmod = "2026-09-19"
 urls = [
     (BASE + "/", "1.0"),
     (BASE + "/layanan.html", "0.9"),
